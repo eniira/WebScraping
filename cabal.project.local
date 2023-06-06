@@ -1,0 +1,7 @@
+ignore-project: False
+
+package *
+  ghc-pkg-location: C:\ghcup\ghc\9.2.8\bin\ghc-pkg
+
+program-locations
+  ghc-pkg-location: C:\ghcup\ghc\9.2.8\bin\ghc-pkg
