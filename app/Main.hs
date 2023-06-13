@@ -372,7 +372,7 @@ data Book = Book
 
 scrapingSaraiva :: String -> IO (Maybe [String])
 scrapingSaraiva livro = do
-    let baseUrl = "https://www.saraiva.com.br/busca?conteudo=" ++ livro ++ "&ordenacao=maior-preco"
+    let baseUrl ="https://www.saraiva.com.br/" ++ livro ++ "?_q=" ++ livro ++ "&map=ft&page="
         page = 1
         firstPageUrl = baseUrl ++ "&page=" ++ show page
     result <- scrapeURL firstPageUrl fetch_links
