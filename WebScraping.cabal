@@ -72,6 +72,7 @@ library
         scalpel >= 0.6.2.1,
         async,
         scalpel-core >= 0.6 && < 0.7,
+        directory,
 
 
     -- Directories containing source files.
@@ -99,7 +100,9 @@ executable WebScraping
         scalpel >= 0.6.2.1,
         scalpel-core >= 0.6 && < 0.7,
         async,
-        WebScraping
+        WebScraping,
+        directory,
+        text,
 
     -- Directories containing source files.
     hs-source-dirs:   app
