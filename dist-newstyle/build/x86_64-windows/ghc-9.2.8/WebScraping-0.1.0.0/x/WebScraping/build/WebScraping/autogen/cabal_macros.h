@@ -121,6 +121,16 @@
   (major1) == 0 && (major2) <  68 || \
   (major1) == 0 && (major2) == 68 && (minor) <= 8)
 #endif /* MIN_TOOL_VERSION_hsc2hs */
+/* tool pkg-config-1.8.0 */
+#ifndef TOOL_VERSION_pkg_config
+#define TOOL_VERSION_pkg_config "1.8.0"
+#endif /* TOOL_VERSION_pkg_config */
+#ifndef MIN_TOOL_VERSION_pkg_config
+#define MIN_TOOL_VERSION_pkg_config(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  8 || \
+  (major1) == 1 && (major2) == 8 && (minor) <= 0)
+#endif /* MIN_TOOL_VERSION_pkg_config */
 /* tool runghc-9.2.8 */
 #ifndef TOOL_VERSION_runghc
 #define TOOL_VERSION_runghc "9.2.8"
@@ -131,15 +141,15 @@
   (major1) == 9 && (major2) <  2 || \
   (major1) == 9 && (major2) == 2 && (minor) <= 8)
 #endif /* MIN_TOOL_VERSION_runghc */
-/* tool strip-2.28 */
+/* tool strip-2.32 */
 #ifndef TOOL_VERSION_strip
-#define TOOL_VERSION_strip "2.28"
+#define TOOL_VERSION_strip "2.32"
 #endif /* TOOL_VERSION_strip */
 #ifndef MIN_TOOL_VERSION_strip
 #define MIN_TOOL_VERSION_strip(major1,major2,minor) (\
   (major1) <  2 || \
-  (major1) == 2 && (major2) <  28 || \
-  (major1) == 2 && (major2) == 28 && (minor) <= 0)
+  (major1) == 2 && (major2) <  32 || \
+  (major1) == 2 && (major2) == 32 && (minor) <= 0)
 #endif /* MIN_TOOL_VERSION_strip */
 
 #ifndef CURRENT_COMPONENT_ID

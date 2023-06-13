@@ -239,7 +239,124 @@
 --             putStrLn "Processamento concluído"
 --         Nothing -> putStrLn "Falha ao processar os resultados"
 
+--codigo da catarine
 
+-- {-# LANGUAGE OverloadedStrings #-}
+
+-- import Control.Concurrent.Async
+-- import Text.HTML.Scalpel
+
+-- data Book = Book
+--     { title :: String
+--     , author :: String
+--     --, link :: String
+--     , price :: String
+--     , img :: URL
+--     } deriving Show
+
+-- scrapingTravessa :: String -> IO (Maybe [String])
+-- scrapingTravessa livro = do
+--     let baseUrl = "https://www.travessa.com.br/Busca.aspx?d=1&bt=" ++ livro ++ "&cta=00&codtipoartigoexplosao=&pag="
+--         page = 0
+--         firstPageUrl = baseUrl ++ show page
+--     result <- scrapeURL firstPageUrl fetch_links
+
+--     case result of
+--         Just updates -> do
+--             rest <- scrapeNextPagesParallel baseUrl (page + 1)
+--             return (Just (updates ++ concat rest))
+--         Nothing -> return Nothing
+
+-- scrapeNextPagesParallel :: String -> Int -> IO [[String]]
+-- scrapeNextPagesParallel baseUrl startPage = do
+--     let pageNumbers = [startPage..26]  -- Páginas de 2 a 11
+--     mapConcurrently (scrapeAndProcessPage baseUrl) pageNumbers
+
+-- scrapeAndProcessPage :: String -> Int -> IO [String]
+-- scrapeAndProcessPage baseUrl page = do
+--     let url = baseUrl ++ show page
+--     result <- scrapeURL url fetch_links
+--     case result of
+--         Just links -> do
+--             --putStrLn ("Resultados da página " ++ show page ++ ":")
+--             processedLinks <- mapM processLink links
+--             --putStrLn ""
+--             return processedLinks
+--         Nothing -> do
+--             putStrLn ("Falha ao processar a página " ++ show page)
+--             return []
+
+-- fetch_links :: Scraper String [String]
+-- fetch_links = chroots ("h4" @: [hasClass "search-result-item-heading"]) isolate_link
+
+-- isolate_link :: Scraper String String
+-- isolate_link = link_book
+
+-- link_book :: Scraper String String
+-- link_book = do
+--     --header <- text $ "a"
+--     url <- attr "href" "a"
+--     return $ url
+
+-- processLink :: String -> IO String
+-- processLink links = do
+--     let bookUrl = links
+--     --putStrLn $ "Acessando link: " ++ bookUrl
+--     result <- scrapeURL bookUrl fetch_book
+--     case result of
+--         Just bookData -> do
+--             --putStrLn "Dados do livro:"
+--             --let bookTitles = map (\book -> getTitle book) bookData -- Extrai os títulos dos livros
+--             mapM_ printBook bookData
+--             --mapM_ putStrLn bookData
+--             --putStrLn ""
+--             return links
+--         Nothing -> do
+--             putStrLn "Falha ao processar a página do livro"
+--             return ""
+
+-- fetch_book :: Scraper String [Book]
+-- fetch_book = chroots ("div" @: [hasClass "main"]) isolate_book
+
+-- isolate_book :: Scraper String Book
+-- isolate_book = book
+
+-- book :: Scraper String Book
+-- book = do
+--     titleText <- text "span"
+--     authorText <- text "a"
+--     priceText <-  text $ "strong"
+--     imgText <- attr "src" $ "img" 
+--     --autor <- text $ "span#lblNomArtigo"
+--     --autor <- text  "" $ "div" @: [hasClass "autordiretor"] 
+--     return (Book titleText authorText priceText imgText)
+
+-- printBook :: Book -> IO ()
+-- printBook info = do
+--     putStrLn ("Título: " ++ title info)
+--     putStrLn ("Autor: " ++ author info)
+--     putStrLn ("Preço: " ++ price info)
+--     putStrLn ("Imagem: " ++ img info)
+--     putStrLn "-------------------"
+
+
+-- main :: IO ()
+-- main = do
+--     putStrLn ""
+--     putStrLn "Digite o livro que deseja encontrar:"
+--     livro <- getLine
+--     putStrLn ""
+--     putStrLn "Carregando..."
+--     putStrLn ""
+--     result <- scrapingTravessa livro
+--     case result of
+--         Just updates -> do
+--             putStrLn "Processamento concluído"
+--         Nothing -> putStrLn "Falha ao processar os resultados"
+
+-- catarine
+
+-- nosso --
 
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -249,86 +366,73 @@ import Text.HTML.Scalpel
 data Book = Book
     { title :: String
     , author :: String
-    --, link :: String
     , price :: String
     , img :: URL
     } deriving Show
 
-scrapingTravessa :: String -> IO (Maybe [String])
-scrapingTravessa livro = do
-    let baseUrl = "https://www.travessa.com.br/Busca.aspx?d=1&bt=" ++ livro ++ "&cta=00&codtipoartigoexplosao=&pag="
-        page = 0
-        firstPageUrl = baseUrl ++ show page
+scrapingSaraiva :: String -> IO (Maybe [String])
+scrapingSaraiva livro = do
+    let baseUrl = "https://www.saraiva.com.br/busca?conteudo=" ++ livro ++ "&ordenacao=maior-preco"
+        page = 1
+        firstPageUrl = baseUrl ++ "&page=" ++ show page
     result <- scrapeURL firstPageUrl fetch_links
 
     case result of
-        Just updates -> do
+        Just links -> do
             rest <- scrapeNextPagesParallel baseUrl (page + 1)
-            return (Just (updates ++ concat rest))
+            return (Just (links ++ concat rest))
         Nothing -> return Nothing
 
 scrapeNextPagesParallel :: String -> Int -> IO [[String]]
 scrapeNextPagesParallel baseUrl startPage = do
-    let pageNumbers = [startPage..26]  -- Páginas de 2 a 11
+    let pageNumbers = [startPage..5]  -- Páginas de 2 a 5
     mapConcurrently (scrapeAndProcessPage baseUrl) pageNumbers
 
 scrapeAndProcessPage :: String -> Int -> IO [String]
 scrapeAndProcessPage baseUrl page = do
-    let url = baseUrl ++ show page
+    let url = baseUrl ++ "&page=" ++ show page
     result <- scrapeURL url fetch_links
     case result of
         Just links -> do
-            --putStrLn ("Resultados da página " ++ show page ++ ":")
             processedLinks <- mapM processLink links
-            --putStrLn ""
             return processedLinks
         Nothing -> do
             putStrLn ("Falha ao processar a página " ++ show page)
             return []
 
 fetch_links :: Scraper String [String]
-fetch_links = chroots ("h4" @: [hasClass "search-result-item-heading"]) isolate_link
+fetch_links = chroots ("div" @: [hasClass "product-name"]) isolate_link
 
 isolate_link :: Scraper String String
 isolate_link = link_book
 
 link_book :: Scraper String String
-link_book = do
-    --header <- text $ "a"
-    url <- attr "href" "a"
-    return $ url
+link_book = attr "href" "a"
 
 processLink :: String -> IO String
-processLink links = do
-    let bookUrl = links
-    --putStrLn $ "Acessando link: " ++ bookUrl
+processLink link = do
+    let bookUrl = link
     result <- scrapeURL bookUrl fetch_book
     case result of
         Just bookData -> do
-            --putStrLn "Dados do livro:"
-            --let bookTitles = map (\book -> getTitle book) bookData -- Extrai os títulos dos livros
             mapM_ printBook bookData
-            --mapM_ putStrLn bookData
-            --putStrLn ""
-            return links
+            return link
         Nothing -> do
             putStrLn "Falha ao processar a página do livro"
             return ""
 
 fetch_book :: Scraper String [Book]
-fetch_book = chroots ("div" @: [hasClass "main"]) isolate_book
+fetch_book = chroots ("div" @: [hasClass "col-sm-5", hasClass "product-main-info"]) isolate_book
 
 isolate_book :: Scraper String Book
 isolate_book = book
 
 book :: Scraper String Book
 book = do
-    titleText <- text "span"
-    authorText <- text "a"
-    priceText <-  text $ "strong"
+    titleText <- text "h1"
+    authorText <- text $ "span" @: [hasClass "product-subtitle"]
+    priceText <- text $ "span" @: [hasClass "price-value"]
     imgText <- attr "src" $ "img" 
-    --autor <- text $ "span#lblNomArtigo"
-    --autor <- text  "" $ "div" @: [hasClass "autordiretor"] 
     return (Book titleText authorText priceText imgText)
 
 printBook :: Book -> IO ()
@@ -347,8 +451,7 @@ main = do
     putStrLn ""
     putStrLn "Carregando..."
     putStrLn ""
-    result <- scrapingTravessa livro
+    result <- scrapingSaraiva livro
     case result of
-        Just updates -> do
-            putStrLn "Processamento concluído"
+        Just links -> putStrLn "Processamento concluído"
         Nothing -> putStrLn "Falha ao processar os resultados"
